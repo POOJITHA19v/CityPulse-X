@@ -1,0 +1,1207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityPulse X — Urban Cascade Intelligence</title>
+
+    <style>
+        :root {
+            --bg: #080d18;
+            --panel: #111a2b;
+            --panel2: #162238;
+            --border: #273650;
+            --text: #edf3ff;
+            --muted: #91a2bd;
+            --blue: #60a5fa;
+            --green: #22c55e;
+            --yellow: #eab308;
+            --red: #ef4444;
+            --purple: #a78bfa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Segoe UI", Arial, sans-serif;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        button {
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .container {
+            width: min(1400px, 94%);
+            margin: auto;
+            padding: 28px 0 45px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo {
+            width: 54px;
+            height: 54px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            font-size: 27px;
+            box-shadow: 0 8px 30px #2563eb33;
+        }
+
+        h1 {
+            font-size: clamp(23px, 3vw, 34px);
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .connection {
+            padding: 9px 14px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--muted);
+            border-radius: 30px;
+            font-size: 12px;
+        }
+
+        .connection.online {
+            color: #86efac;
+            border-color: #166534;
+            background: #052e16;
+        }
+
+        .connection.offline {
+            color: #fca5a5;
+            border-color: #7f1d1d;
+            background: #350b13;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 25px 0 14px;
+        }
+
+        .section-heading h2 {
+            font-size: 18px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .scenario-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .scenario-btn {
+            padding: 11px 17px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            background: var(--panel);
+            transition: .2s;
+        }
+
+        .scenario-btn:hover {
+            border-color: var(--blue);
+            transform: translateY(-1px);
+        }
+
+        .scenario-btn.active {
+            background: #1d4ed8;
+            border-color: #60a5fa;
+        }
+
+        .scenario-btn:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            min-width: 0;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: linear-gradient(145deg, var(--panel), #0e1727);
+            box-shadow: 0 8px 25px #00000012;
+        }
+
+        .card-label {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .metric {
+            font-size: clamp(23px, 3vw, 32px);
+            font-weight: 750;
+            margin: 10px 0 5px;
+            overflow-wrap: anywhere;
+        }
+
+        .metric-caption {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .weather-icon {
+            font-size: 23px;
+            margin-bottom: 12px;
+        }
+
+        .risk-layout {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .risk-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .risk-card::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            right: -90px;
+            top: -100px;
+            background: #2563eb18;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .risk-number {
+            font-size: 58px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin: 14px 0 10px;
+        }
+
+        .risk-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .badge {
+            display: inline-flex;
+            padding: 5px 10px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            background: #1e293b;
+            color: #cbd5e1;
+        }
+
+        .low {
+            color: #86efac;
+            background: #052e16;
+        }
+
+        .moderate {
+            color: #fde047;
+            background: #422006;
+        }
+
+        .high {
+            color: #fca5a5;
+            background: #450a0a;
+        }
+
+        .critical {
+            color: #fecaca;
+            background: #7f1d1d;
+        }
+
+        .progress-track {
+            height: 9px;
+            border-radius: 10px;
+            background: #253248;
+            overflow: hidden;
+            margin: 14px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--green);
+            border-radius: inherit;
+            transition: width .5s ease;
+        }
+
+        .muted {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .ml-box {
+            margin-top: 16px;
+            padding: 15px;
+            border: 1px solid #473778;
+            background: #21183b;
+            border-radius: 12px;
+        }
+
+        .ml-box h3 {
+            font-size: 14px;
+            color: #c4b5fd;
+            margin-bottom: 8px;
+        }
+
+        .ml-box p {
+            color: #ded6ff;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .infra-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .infra-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .infra-name {
+            font-weight: 650;
+            font-size: 15px;
+        }
+
+        .infra-score {
+            font-size: 27px;
+            font-weight: 750;
+        }
+
+        .reason-list {
+            padding-left: 18px;
+            color: var(--muted);
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .reason-list li {
+            margin: 5px 0;
+        }
+
+        .recommendations {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .recommendation-card {
+            border: 1px solid var(--border);
+            background: var(--panel);
+            border-radius: 14px;
+            padding: 17px;
+        }
+
+        .recommendation-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .recommendation-title {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .priority {
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 10px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .priority-immediate {
+            color: #fecaca;
+            background: #7f1d1d;
+        }
+
+        .priority-high {
+            color: #fde68a;
+            background: #713f12;
+        }
+
+        .priority-normal {
+            color: #86efac;
+            background: #14532d;
+        }
+
+        .recommendation-card p {
+            font-size: 13px;
+            color: #c3cee0;
+            overflow-wrap: anywhere;
+        }
+
+        .recommendation-card .rec-risk {
+            margin-top: 9px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .events-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .event-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            background: var(--panel2);
+            border: 1px solid var(--border);
+        }
+
+        .event-number {
+            width: 30px;
+            height: 30px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 9px;
+            background: #1d4ed8;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .event-item h4 {
+            font-size: 13px;
+            margin-bottom: 3px;
+        }
+
+        .event-item p {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .status-message {
+            padding: 12px 15px;
+            margin-top: 20px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--panel);
+            color: var(--muted);
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .refresh-btn {
+            padding: 8px 13px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--text);
+            border-radius: 9px;
+        }
+
+        .refresh-btn:hover {
+            border-color: var(--blue);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 26px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        @media (max-width: 950px) {
+            .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .risk-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .container {
+                width: 92%;
+                padding-top: 20px;
+            }
+
+            .grid,
+            .recommendations {
+                grid-template-columns: 1fr;
+            }
+
+            .scenario-buttons {
+                display: grid;
+                grid-template-columns: 1fr;
+                width: 100%;
+            }
+
+            .scenario-btn {
+                width: 100%;
+            }
+
+            .card {
+                padding: 17px;
+            }
+
+            .risk-number {
+                font-size: 48px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <header>
+        <div class="brand">
+            <div class="logo">🌆</div>
+            <div>
+                <h1>CityPulse X</h1>
+                <p class="subtitle">Urban Cascade Intelligence System</p>
+            </div>
+        </div>
+
+        <div id="connectionBadge" class="connection">
+            ● Connecting to backend...
+        </div>
+    </header>
+
+    <section>
+        <div class="section-heading">
+            <h2>Weather Scenarios</h2>
+            <p>Select a scenario to run the backend analysis</p>
+        </div>
+
+        <div class="scenario-buttons">
+            <button class="scenario-btn active"
+                    data-scenario="normal">☀️ Normal Weather</button>
+
+            <button class="scenario-btn"
+                    data-scenario="rain">🌧️ Heavy Rain</button>
+
+            <button class="scenario-btn"
+                    data-scenario="storm">⛈️ Severe Storm</button>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-heading">
+            <h2>Weather Conditions</h2>
+            <p id="scenarioName">Normal Weather</p>
+        </div>
+
+        <div class="grid">
+            <article class="card">
+                <div class="weather-icon">🌧️</div>
+                <div class="card-label">Rainfall</div>
+                <div class="metric" id="rainfall">-- mm</div>
+                <div class="metric-caption">Millimeters of rainfall</div>
+            </article>
+
+            <article class="card">
+                <div class="weather-icon">💨</div>
+                <div class="card-label">Wind Speed</div>
+                <div class="metric" id="wind">-- km/h</div>
+                <div class="metric-caption">Wind velocity</div>
+            </article>
+
+            <article class="card">
+                <div class="weather-icon">⚡</div>
+                <div class="card-label">Lightning Probability</div>
+                <div class="metric" id="lightning">--%</div>
+                <div class="metric-caption">Estimated probability</div>
+            </article>
+
+            <article class="card">
+                <div class="weather-icon">🌩️</div>
+                <div class="card-label">Thunderstorm Intensity</div>
+                <div class="metric" id="thunder">--%</div>
+                <div class="metric-caption">Intensity indicator</div>
+            </article>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-heading">
+            <h2>Urban Risk Overview</h2>
+            <p>Results from the cascade analysis engine</p>
+        </div>
+
+        <div class="risk-layout">
+            <article class="card risk-card">
+                <div class="card-label">Overall Cascade Risk Score</div>
+                <div class="risk-number" id="riskScore">--</div>
+
+                <div class="risk-meta">
+                    <span id="riskLevel" class="badge low">CALCULATING</span>
+                    <span class="muted">
+                        Cascade depth: <strong id="cascadeDepth">--</strong>
+                    </span>
+                </div>
+
+                <div class="progress-track">
+                    <div id="riskProgress" class="progress-bar"></div>
+                </div>
+
+                <p id="riskDescription" class="muted">
+                    Waiting for backend analysis...
+                </p>
+
+                <div class="ml-box">
+                    <h3>🤖 Machine Learning Prediction</h3>
+                    <p id="mlPrediction">Waiting for model results...</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="section-heading" style="margin-top:0">
+                    <h2>⚠️ Cascade Events</h2>
+                    <span class="badge" id="eventCount">0 EVENTS</span>
+                </div>
+
+                <div class="events-list" id="eventsList">
+                    <p class="muted">Loading cascade events...</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-heading">
+            <h2>Infrastructure Risk Assessment</h2>
+            <p>Risk scores out of 100</p>
+        </div>
+
+        <div class="grid">
+            <article class="card infra-card">
+                <div class="infra-top">
+                    <div>
+                        <div class="infra-name">⚡ Power Grid</div>
+                        <p class="muted">Electrical infrastructure</p>
+                    </div>
+                    <span id="powerLabel" class="badge low">--</span>
+                </div>
+                <div class="infra-score" id="powerScore">--/100</div>
+                <div class="progress-track">
+                    <div id="powerProgress" class="progress-bar"></div>
+                </div>
+                <ul class="reason-list" id="powerReasons">
+                    <li>Waiting for assessment...</li>
+                </ul>
+            </article>
+
+            <article class="card infra-card">
+                <div class="infra-top">
+                    <div>
+                        <div class="infra-name">🏥 Hospitals</div>
+                        <p class="muted">Healthcare infrastructure</p>
+                    </div>
+                    <span id="waterLabel" class="badge low">--</span>
+                </div>
+                <div class="infra-score" id="waterScore">--/100</div>
+                <div class="progress-track">
+                    <div id="waterProgress" class="progress-bar"></div>
+                </div>
+                <ul class="reason-list" id="waterReasons">
+                    <li>Waiting for assessment...</li>
+                </ul>
+            </article>
+
+            <article class="card infra-card">
+                <div class="infra-top">
+                    <div>
+                        <div class="infra-name">🛣️ Road Network</div>
+                        <p class="muted">Road accessibility</p>
+                    </div>
+                    <span id="transportLabel" class="badge low">--</span>
+                </div>
+                <div class="infra-score" id="transportScore">--/100</div>
+                <div class="progress-track">
+                    <div id="transportProgress" class="progress-bar"></div>
+                </div>
+                <ul class="reason-list" id="transportReasons">
+                    <li>Waiting for assessment...</li>
+                </ul>
+            </article>
+
+            <article class="card infra-card">
+                <div class="infra-top">
+                    <div>
+                        <div class="infra-name">🚦 Traffic Network</div>
+                        <p class="muted">Urban traffic systems</p>
+                    </div>
+                    <span id="communicationLabel" class="badge low">--</span>
+                </div>
+                <div class="infra-score" id="communicationScore">--/100</div>
+                <div class="progress-track">
+                    <div id="communicationProgress" class="progress-bar"></div>
+                </div>
+                <ul class="reason-list" id="communicationReasons">
+                    <li>Waiting for assessment...</li>
+                </ul>
+            </article>
+        </div>
+    </section>
+
+    <section>
+        <div class="section-heading">
+            <h2>Recommended Actions</h2>
+            <p>Prioritized by the backend engine</p>
+        </div>
+
+        <div class="recommendations" id="recommendations">
+            <article class="recommendation-card">
+                <p>Loading recommendations...</p>
+            </article>
+        </div>
+    </section>
+
+    <div class="status-message" id="systemStatus">
+        Initializing CityPulse X...
+    </div>
+
+    <div class="section-heading">
+        <p>Last updated: <span id="lastUpdated">Not yet updated</span></p>
+        <button class="refresh-btn" id="refreshBtn">↻ Refresh Analysis</button>
+    </div>
+
+    <footer>
+        CityPulse X · Urban Cascade Intelligence · Demonstration Dashboard
+        <p style="margin-top:6px">
+            Model predictions are experimental and should not be used as
+            the sole basis for real-world emergency decisions.
+        </p>
+    </footer>
+</div>
+
+<script>
+"use strict";
+
+const API_BASE = "http://127.0.0.1:8000";
+let currentScenario = "normal";
+let requestNumber = 0;
+
+const $ = id => document.getElementById(id);
+
+const scenarios = {
+    normal: "Normal Weather",
+    rain: "Heavy Rain",
+    storm: "Severe Storm"
+};
+
+const infrastructureMap = {
+    "power grid": "power",
+    "hospitals": "water",
+    "road network": "transport",
+    "traffic network": "communication"
+};
+
+function riskClass(level) {
+    const value = String(level || "LOW").toLowerCase();
+
+    if (value.includes("critical")) return "critical";
+    if (value.includes("high")) return "high";
+    if (value.includes("moderate") || value.includes("medium")) {
+        return "moderate";
+    }
+
+    return "low";
+}
+
+function setBadge(id, level) {
+    const el = $(id);
+    if (!el) return;
+
+    el.className = "badge " + riskClass(level);
+    el.textContent = String(level || "LOW").toUpperCase();
+}
+
+function setProgress(id, score, level) {
+    const el = $(id);
+    if (!el) return;
+
+    const value = Math.max(0, Math.min(100, Number(score) || 0));
+    el.style.width = value + "%";
+
+    const colors = {
+        low: "#22c55e",
+        moderate: "#eab308",
+        high: "#ef4444",
+        critical: "#dc2626"
+    };
+
+    el.style.background = colors[riskClass(level)];
+}
+
+function firstDefined(object, keys, fallback = undefined) {
+    for (const key of keys) {
+        if (object && object[key] !== undefined && object[key] !== null) {
+            return object[key];
+        }
+    }
+
+    return fallback;
+}
+
+function displayNumber(value, suffix = "") {
+    const number = Number(value);
+    return (Number.isFinite(number) ? number : 0) + suffix;
+}
+
+function normalizeList(value) {
+    if (Array.isArray(value)) return value;
+    if (value && typeof value === "object") {
+        return Object.entries(value).map(([name, item]) => {
+            if (item && typeof item === "object") {
+                return { name, ...item };
+            }
+            return { name, risk_score: item };
+        });
+    }
+    return [];
+}
+
+function updateInfrastructure(cardId, item) {
+    const score = Number(firstDefined(
+        item,
+        ["risk_score", "score", "risk", "risk_percentage"],
+        0
+    ));
+
+    const level = firstDefined(
+        item,
+        ["risk_level", "level", "severity"],
+        score >= 80 ? "CRITICAL" :
+        score >= 60 ? "HIGH" :
+        score >= 30 ? "MODERATE" : "LOW"
+    );
+
+    $(cardId + "Score").textContent = Math.round(score) + "/100";
+    setBadge(cardId + "Label", level);
+    setProgress(cardId + "Progress", score, level);
+
+    const reasons = firstDefined(
+        item,
+        ["reasons", "factors", "causes", "impacts"],
+        []
+    );
+
+    const list = $(cardId + "Reasons");
+    list.replaceChildren();
+
+    const entries = Array.isArray(reasons) ? reasons : [reasons];
+
+    if (!entries.length) {
+        const li = document.createElement("li");
+        li.textContent = "No additional details provided.";
+        list.appendChild(li);
+        return;
+    }
+
+    entries.forEach(reason => {
+        const li = document.createElement("li");
+        li.textContent = typeof reason === "string"
+            ? reason
+            : JSON.stringify(reason);
+        list.appendChild(li);
+    });
+}
+
+function renderEvents(events) {
+    const container = $("eventsList");
+    container.replaceChildren();
+
+    const items = normalizeList(events);
+
+    $("eventCount").textContent = items.length + " EVENTS";
+
+    if (!items.length) {
+        const p = document.createElement("p");
+        p.className = "muted";
+        p.textContent = "No cascade events were returned by the backend.";
+        container.appendChild(p);
+        return;
+    }
+
+    items.forEach((event, index) => {
+        const item = document.createElement("article");
+        item.className = "event-item";
+
+        const number = document.createElement("div");
+        number.className = "event-number";
+        number.textContent = index + 1;
+
+        const content = document.createElement("div");
+
+        const heading = document.createElement("h4");
+        heading.textContent = typeof event === "string"
+            ? event
+            : firstDefined(event, ["name", "event", "title", "type"],
+                "Cascade event " + (index + 1));
+
+        const description = document.createElement("p");
+        description.textContent = typeof event === "object"
+            ? firstDefined(
+                event,
+                ["description", "impact", "details", "message"],
+                "Identified by the cascade analysis engine."
+            )
+            : "Identified by the cascade analysis engine.";
+
+        content.append(heading, description);
+        item.append(number, content);
+        container.appendChild(item);
+    });
+}
+
+function renderRecommendations(recommendations) {
+    const container = $("recommendations");
+    container.replaceChildren();
+
+    const items = normalizeList(recommendations);
+
+    if (!items.length) {
+        const p = document.createElement("p");
+        p.className = "muted";
+        p.textContent = "No recommendations were returned.";
+        container.appendChild(p);
+        return;
+    }
+
+    items.forEach(item => {
+        const article = document.createElement("article");
+        article.className = "recommendation-card";
+
+        const header = document.createElement("div");
+        header.className = "recommendation-header";
+
+        const title = document.createElement("div");
+        title.className = "recommendation-title";
+        title.textContent = firstDefined(
+            item,
+            ["infrastructure", "name", "title", "system"],
+            "Infrastructure"
+        );
+
+        const priorityValue = firstDefined(
+            item,
+            ["priority", "urgency"],
+            "MONITOR"
+        );
+
+        const priority = document.createElement("span");
+        priority.className = "priority " +
+            (String(priorityValue).toUpperCase() === "IMMEDIATE"
+                ? "priority-immediate"
+                : ["HIGH", "PREPARE"].includes(
+                    String(priorityValue).toUpperCase()
+                )
+                    ? "priority-high"
+                    : "priority-normal");
+
+        priority.textContent = priorityValue;
+
+        header.append(title, priority);
+
+        const description = document.createElement("p");
+        description.textContent = firstDefined(
+            item,
+            ["recommended_action", "action", "recommendation", "description"],
+            "Continue monitoring conditions."
+        );
+
+        const risk = document.createElement("p");
+        risk.className = "rec-risk";
+
+        const level = firstDefined(item, ["risk_level", "level"], "Unknown");
+        const score = firstDefined(item, ["risk_score", "score"], null);
+
+        risk.textContent = "Risk: " + level +
+            (score !== null ? " · Score: " + score + "/100" : "");
+
+        article.append(header, description, risk);
+        container.appendChild(article);
+    });
+}
+
+function renderResult(result) {
+    // Support both a nested response and a top-level backend response.
+    const prediction = result.prediction || result;
+    const weather = result.weather || result.input_weather || {};
+
+    const rainfall = firstDefined(
+        weather, ["rainfall_mm", "rain_mm", "rainfall"], null
+    );
+    const wind = firstDefined(
+        weather, ["wind_speed_kmh", "wind_kmh", "wind_speed"], null
+    );
+    const lightning = firstDefined(
+        weather, ["lightning_probability", "lightning"], null
+    );
+    const thunder = firstDefined(
+        weather, ["thunderstorm_intensity", "thunderstorm", "thunder"], null
+    );
+
+    $("scenarioName").textContent =
+        scenarios[result.scenario] || scenarios[currentScenario];
+
+    $("rainfall").textContent =
+        rainfall === null ? "-- mm" : displayNumber(rainfall, " mm");
+
+    $("wind").textContent =
+        wind === null ? "-- km/h" : displayNumber(wind, " km/h");
+
+    $("lightning").textContent = lightning === null
+        ? "--%"
+        : Math.round(Number(lightning) <= 1
+            ? Number(lightning) * 100
+            : Number(lightning)) + "%";
+
+    $("thunder").textContent = thunder === null
+        ? "--%"
+        : Math.round(Number(thunder) <= 1
+            ? Number(thunder) * 100
+            : Number(thunder)) + "%";
+
+    const score = Number(firstDefined(
+        prediction,
+        ["cascade_score", "overall_risk_score", "risk_score", "score"],
+        0
+    ));
+
+    const level = firstDefined(
+        prediction,
+        ["risk_level", "overall_risk_level", "severity"],
+        score >= 80 ? "CRITICAL" :
+        score >= 60 ? "HIGH" :
+        score >= 30 ? "MODERATE" : "LOW"
+    );
+
+    const depth = firstDefined(
+        prediction,
+        ["cascade_depth", "depth"],
+        normalizeList(prediction.events).length
+    );
+
+    $("riskScore").textContent = Math.round(score);
+    setBadge("riskLevel", level);
+    $("riskLevel").textContent = String(level).toUpperCase() + " RISK";
+    setProgress("riskProgress", score, level);
+    $("cascadeDepth").textContent = depth;
+
+    const ml = firstDefined(
+        prediction,
+        ["ml_prediction"],
+        result.ml_prediction || {}
+    );
+
+    if (ml && ml.available === false) {
+        $("mlPrediction").textContent = "ML model is currently unavailable.";
+    } else if (ml && Object.keys(ml).length) {
+        const modelName = firstDefined(ml, ["model", "model_name"], "ML model");
+        const mlLevel = firstDefined(ml, ["risk_level", "prediction"], "Unknown");
+        $("mlPrediction").textContent =
+            mlLevel + " risk · Model: " + modelName;
+    } else {
+        $("mlPrediction").textContent =
+            "No separate ML prediction was returned by the backend.";
+    }
+
+    $("riskDescription").textContent =
+        "Cascade events: " + depth +
+        " · Overall classification: " + String(level).toUpperCase();
+
+    let infrastructure = firstDefined(
+        prediction,
+        ["infrastructure_assessment", "infrastructure_risks", "infrastructure"],
+        []
+    );
+
+    infrastructure = normalizeList(infrastructure);
+
+    infrastructure.forEach(item => {
+        const name = String(firstDefined(
+            item, ["name", "infrastructure", "system"], ""
+        )).toLowerCase();
+
+        const cardId = infrastructureMap[name];
+
+        if (cardId) {
+            updateInfrastructure(cardId, item);
+        }
+    });
+
+    const events = firstDefined(
+        prediction,
+        ["events", "cascade_events"],
+        []
+    );
+
+    renderEvents(events);
+
+    const recommendations = firstDefined(
+        prediction,
+        ["recommendations", "recommended_actions"],
+        result.recommendations || []
+    );
+
+    renderRecommendations(recommendations);
+
+    $("lastUpdated").textContent = new Date().toLocaleTimeString();
+
+    $("systemStatus").textContent =
+        "Backend analysis complete · " + depth +
+        " cascade events · Scenario: " +
+        (scenarios[result.scenario] || currentScenario);
+
+    $("connectionBadge").textContent = "● Backend connected";
+    $("connectionBadge").className = "connection online";
+}
+
+function showError(message) {
+    $("systemStatus").textContent = message;
+    $("connectionBadge").textContent = "● Backend unavailable";
+    $("connectionBadge").className = "connection offline";
+}
+
+async function loadScenario(scenario) {
+    currentScenario = scenario;
+    const thisRequest = ++requestNumber;
+
+    $("scenarioName").textContent = scenarios[scenario] || scenario;
+    $("systemStatus").textContent = "Loading backend analysis...";
+
+    document.querySelectorAll("[data-scenario]").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.scenario === scenario
+        );
+    });
+
+    try {
+        const response = await fetch(
+            API_BASE + "/api/cascade?scenario=" +
+            encodeURIComponent(scenario)
+        );
+
+        if (!response.ok) {
+            throw new Error("API returned HTTP " + response.status);
+        }
+
+        const result = await response.json();
+
+        if (thisRequest !== requestNumber) return;
+
+        renderResult(result);
+    } catch (error) {
+        if (thisRequest !== requestNumber) return;
+
+        showError(
+            "Could not load backend results: " + error.message +
+            ". Check that FastAPI is running."
+        );
+    }
+}
+
+async function checkBackend() {
+    try {
+        const response = await fetch(API_BASE + "/health");
+
+        if (!response.ok) {
+            throw new Error("Health check returned HTTP " + response.status);
+        }
+
+        const data = await response.json();
+
+        if (data.status !== "healthy") {
+            throw new Error("Backend health status is not healthy");
+        }
+
+        $("connectionBadge").textContent = "● Backend connected";
+        $("connectionBadge").className = "connection online";
+
+        return true;
+    } catch (error) {
+        $("connectionBadge").textContent = "● Backend unavailable";
+        $("connectionBadge").className = "connection offline";
+        $("systemStatus").textContent =
+            "Cannot connect to FastAPI. Start the backend and refresh.";
+        return false;
+    }
+}
+
+document.querySelectorAll("[data-scenario]").forEach(button => {
+    button.addEventListener("click", () => {
+        loadScenario(button.dataset.scenario);
+    });
+});
+
+$("refreshBtn").addEventListener("click", async () => {
+    const connected = await checkBackend();
+
+    if (connected) {
+        await loadScenario(currentScenario);
+    }
+});
+
+// The dashboard remains visible even if the API is not running.
+checkBackend();
+loadScenario(currentScenario);
+</script>
+
+</body>
+</html>

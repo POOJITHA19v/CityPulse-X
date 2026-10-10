@@ -1,0 +1,55 @@
+{
+  "features": [
+    "rainfall_mm",
+    "wind_speed_kmh",
+    "lightning_probability",
+    "thunderstorm_intensity"
+  ],
+  "classes": {
+    "HIGH": {
+      "prior": 0.31575,
+      "means": {
+        "rainfall_mm": 132.82571654790183,
+        "wind_speed_kmh": 84.7690023752969,
+        "lightning_probability": 0.613249406175772,
+        "thunderstorm_intensity": 0.7034220110847189
+      },
+      "variances": {
+        "rainfall_mm": 2039.4293207652606,
+        "wind_speed_kmh": 1588.0333179279437,
+        "lightning_probability": 0.0802416646374146,
+        "thunderstorm_intensity": 0.06532710060814874
+      }
+    },
+    "LOW": {
+      "prior": 0.096,
+      "means": {
+        "rainfall_mm": 41.247135416666666,
+        "wind_speed_kmh": 30.917578125000002,
+        "lightning_probability": 0.29960677083333337,
+        "thunderstorm_intensity": 0.494828125
+      },
+      "variances": {
+        "rainfall_mm": 562.079731898329,
+        "wind_speed_kmh": 279.6946933532715,
+        "lightning_probability": 0.030489264641655817,
+        "thunderstorm_intensity": 0.08567603816731771
+      }
+    },
+    "MODERATE": {
+      "prior": 0.58825,
+      "means": {
+        "rainfall_mm": 92.3919039524012,
+        "wind_speed_kmh": 74.29322566935826,
+        "lightning_probability": 0.47345728856778585,
+        "thunderstorm_intensity": 0.40662260943476414
+      },
+      "variances": {
+        "rainfall_mm": 3349.8224404888624,
+        "wind_speed_kmh": 1850.0375424637355,
+        "lightning_probability": 0.08081462386634129,
+        "thunderstorm_intensity": 0.061023173343467095
+      }
+    }
+  }
+}
